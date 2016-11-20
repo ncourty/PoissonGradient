@@ -1,5 +1,3 @@
-# PoissonGradient
-
 # Poisson Blending with adapted gradients
 
 This library is a simple demonstration of using Optimal Transport Mapping Estimation [1]
