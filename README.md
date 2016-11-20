@@ -10,6 +10,7 @@ The Library has been tested on Linux and MacOSX. Among other classical dependenc
 - Numpy (>=1.11)
 - Scipy (>=0.17)
 - Matplotlib (>=1.5)
+- Pyamg (>=3.1)
 - POT (>=1.0)
 
 
