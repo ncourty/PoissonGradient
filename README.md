@@ -20,7 +20,7 @@ The Library has been tested on Linux and MacOSX. Among other classical dependenc
 
 One notebook is provided as example of use:
 
-* [Example](https://github.com/rflamary/ncourty/PoissonGradient/blob/master/test.ipynb)
+* [Example](https://github.com/ncourty/PoissonGradient/blob/master/test.ipynb)
 
 
 
