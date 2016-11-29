@@ -17,16 +17,24 @@ import PIL.Image
 
 from poissonblending import blend
 
+fname_mask='./data/joconde_0_mask.jpg'
+fname_img='./data/joconde_0.jpg'
 
-img_mask = np.asarray(PIL.Image.open('./data/joconde_0_mask.jpg'))
-img_mask = img_mask[:,:,:3] # remove alpha
+fname_mask='./data/monet_portrait_mask.jpg'
+fname_img='./data/monet_portrait.jpg'
+
+img_mask = np.asarray(PIL.Image.open(fname_mask))
+
+if len(img_mask.shape)<3:
+    img_mask = np.tile(img_mask[:,:,None],(1,1,3)) # remove alpha
+
 img_mask.flags.writeable = True
 
 #img_source = np.asarray(PIL.Image.open('./testimages/me_flipped.png'))
 #img_source = img_source[:,:,:3]
 #img_source.flags.writeable = True
 
-img_target = np.asarray(PIL.Image.open('./data/joconde_0.jpg'))
+img_target = np.asarray(PIL.Image.open(fname_img))
 img_target.flags.writeable = True
 
 
