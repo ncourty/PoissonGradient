@@ -70,7 +70,7 @@ I = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 #pl.show()
 nbsample=500
 off = (0,0)
-img_ret4 = blend(img_target, I, img_mask, reg=5, nbsubsample=nbsample,offset=off,adapt='kernel')
+img_ret4 = blend(img_target, I, img_mask, reg=5, nbsubsample=nbsample,offset=off,adapt='kernel',verbose=True)
 
 #%%
 fs=30
