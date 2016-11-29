@@ -20,14 +20,14 @@ from poissonblending import blend
 fname_mask='./data/joconde_0_mask.jpg'
 fname_img='./data/joconde_0.jpg'
 
-fname_mask='./data/monet_portrait_mask.jpg'
-fname_img='./data/monet_portrait.jpg'
+fname_mask='./data/monet_portrait_mask.png'
+fname_img='./data/monet_portrait.png'
 
 img_mask = np.asarray(PIL.Image.open(fname_mask))
 
 if len(img_mask.shape)<3:
     img_mask = np.tile(img_mask[:,:,None],(1,1,3)) # remove alpha
-
+img_mask = img_mask[:,:,:3]
 img_mask.flags.writeable = True
 
 #img_source = np.asarray(PIL.Image.open('./testimages/me_flipped.png'))
@@ -35,6 +35,7 @@ img_mask.flags.writeable = True
 #img_source.flags.writeable = True
 
 img_target = np.asarray(PIL.Image.open(fname_img))
+img_target = img_target[:,:,:3]
 img_target.flags.writeable = True
 
 

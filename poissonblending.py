@@ -73,7 +73,7 @@ def blend(img_target, img_source, img_mask_raw, nbsubsample=100, offset=(0, 0),a
             min(img_target.shape[0], img_source.shape[0]+offset[0]),
             min(img_target.shape[1], img_source.shape[1]+offset[1]))
     region_size = (region_source[2]-region_source[0], region_source[3]-region_source[1])
-    print region_size
+    #print region_size
 
     # clip and normalize mask image
     img_mask = img_mask_raw[region_source[0]:region_source[2], region_source[1]:region_source[3]]
