@@ -8,11 +8,15 @@ Created on Wed Aug 31 08:24:30 2016
 import numpy as np
 import cv2
 import pylab as pl
+import sys
+
 
 cap = cv2.VideoCapture(0)
 
 import numpy as np
 import PIL.Image
+
+
 
 
 from poissonblending import blend
@@ -21,10 +25,22 @@ fname_mask='./data/joconde_0_mask.jpg'
 fname_img='./data/joconde_0.jpg'
 
 mask_list=['./data/joconde_0_mask.jpg',
-           './data/monet_portrait_mask.png']
+           './data/monet_portrait_mask.png',
+           './data/estree_mask.png',
+           './data/firefly_mask.png',
+           './data/vapnik_mask.png']
 
 img_list=['./data/joconde_0.jpg',
-           './data/monet_portrait.png']
+           './data/monet_portrait.png',
+           './data/estree.png',
+           './data/firefly.png',
+           './data/vapnik.png']
+
+adapt_list=['kernel',
+            'kernel',
+            'kernel',
+            'kernel',
+            'kernel']
 
 nimg=len(img_list)
 idimg=0
@@ -79,12 +95,14 @@ while(True):
         if etape==1:
             doit=True
             break
+        else:
+            etape=1
     if k in [ ord('q')]:
         doit=False
         break
     if k in [ord('v')]:
          etape=1
-    if k in [ord('i')]:
+    if k in [ord('i'),ord('m')]:
          idimg=(idimg+1) % nimg
          fname_mask=mask_list[idimg]
          fname_img=img_list[idimg]
@@ -99,13 +117,14 @@ cap.release()
 cv2.destroyAllWindows()
 
 
+
 I = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
 
 if doit:
     nbsample=500
     off = (0,0)
-    img_ret4 = blend(img_target, I, img_mask, reg=5, nbsubsample=nbsample,offset=off,adapt='kernel',verbose=True)
+    img_ret4 = blend(img_target, I, img_mask, reg=5, nbsubsample=nbsample,offset=off,adapt=adapt_list[idimg],verbose=True)
 
     #%%
     fs=30
@@ -126,5 +145,10 @@ if doit:
     pl.subplots_adjust(wspace=0.1)
     pl.tight_layout()
 
-    pl.savefig('./output/webcam.png')
+    if len(sys.argv)>1:
+        savename='./output/{}_{}.png'.format(sys.argv[1],idimg)
+    else:
+        savename='./output/{}_{}.png'.format('output',idimg)
+
+    pl.savefig(savename)
     pl.show()
