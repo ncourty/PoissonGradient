@@ -33,11 +33,11 @@ def adapt_Gradients_linear(G_src,G_tgt,mu=1e-2,eta=1e-6,nb=100,bias=True):
     ot_mapping=ot.da.OTDA_mapping_linear()
     ot_mapping.fit(Xs,Xt,mu=mu,eta=eta,bias=bias,numItermax = 10,verbose=True)
     return ot_mapping.predict(G_src)
-    
+
 
 def adapt_Gradients_kernel(G_src,G_tgt,mu=1e2,eta=1e-8,nb=10,bias=False,sigma=1e2):
     Xs, Xt = subsample(G_src,G_tgt,nb)
-    
+
     ot_mapping_kernel=ot.da.OTDA_mapping_kernel()
     ot_mapping_kernel.fit(Xs,Xt,mu=mu,eta=eta,sigma=sigma,bias=bias,numItermax = 10,verbose=True)
 
@@ -57,8 +57,11 @@ def prepare_mask(mask):
         mask = result
     return mask
 
-def blend(img_target, img_source, img_mask_raw, nbsubsample=100, offset=(0, 0),adapt='none',reg=1.,eta=1e-9,visu=0):
+def blend(img_target, img_source, img_mask_raw, nbsubsample=100, offset=(0, 0),adapt='none',reg=1.,eta=1e-9,visu=0,verbose=False):
     # compute regions to be blended
+
+    if verbose:
+        print("Reticulating splines")
     region_source = (
             max(-offset[0], 0),
             max(-offset[1], 0),
@@ -70,13 +73,15 @@ def blend(img_target, img_source, img_mask_raw, nbsubsample=100, offset=(0, 0),a
             min(img_target.shape[0], img_source.shape[0]+offset[0]),
             min(img_target.shape[1], img_source.shape[1]+offset[1]))
     region_size = (region_source[2]-region_source[0], region_source[3]-region_source[1])
-    print region_size
+    #print region_size
 
     # clip and normalize mask image
     img_mask = img_mask_raw[region_source[0]:region_source[2], region_source[1]:region_source[3]]
     img_mask = prepare_mask(img_mask)
     img_mask[img_mask==0] = False
     img_mask[img_mask!=False] = True
+
+
 
     # create coefficient matrix
     A = scipy.sparse.identity(np.prod(region_size), format='lil')
@@ -112,6 +117,8 @@ def blend(img_target, img_source, img_mask_raw, nbsubsample=100, offset=(0, 0),a
     G_tgt = G_tgt_tot
 
 
+    if verbose:
+        print("Reticulating gradients")
     if adapt=='none':
         newG = G_src
     elif adapt=='linear':
@@ -122,6 +129,8 @@ def blend(img_target, img_source, img_mask_raw, nbsubsample=100, offset=(0, 0),a
     newGrad=newG
 
     # for each layer (ex. RGB)
+    if verbose:
+        print("Reticulating fish")
     im_return = img_target.copy()
     for num_layer in range(img_target.shape[2]):
         t = img_target[region_target[0]:region_target[2],region_target[1]:region_target[3],num_layer]
@@ -151,5 +160,8 @@ def blend(img_target, img_source, img_mask_raw, nbsubsample=100, offset=(0, 0),a
         x[x<0] = 0
         x = np.array(x, img_target.dtype)
         im_return[region_target[0]:region_target[2],region_target[1]:region_target[3],num_layer] = x
+
+    if verbose:
+        print("Reticulating done")
 
     return im_return

@@ -5,14 +5,14 @@ import numpy as np
 import PIL.Image
 import pylab as pl
 
-from poissonblending import blend 
+from poissonblending import blend
 
 
-img_mask = np.asarray(PIL.Image.open('./me_mask.png'))
+img_mask = np.asarray(PIL.Image.open('./data/me_mask.png'))
 img_mask = img_mask[:,:,:3] # remove alpha
-img_source = np.asarray(PIL.Image.open('./me.png'))
+img_source = np.asarray(PIL.Image.open('./data/me.png'))
 img_source = img_source[:,:,:3] # remove alpha
-img_target = np.asarray(PIL.Image.open('./target.png'))
+img_target = np.asarray(PIL.Image.open('./data/target.png'))
 
 
 nbsample=500
