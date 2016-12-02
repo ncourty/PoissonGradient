@@ -28,15 +28,18 @@ mask_list=['./data/joconde_0_mask.jpg',
            './data/monet_portrait_mask.png',
            './data/estree_mask.png',
            './data/firefly_mask.png',
-           './data/vapnik_mask.png']
+           './data/vapnik_mask.png',
+           './data/dorothy_mask.png']
 
 img_list=['./data/joconde_0.jpg',
            './data/monet_portrait.png',
            './data/estree.png',
            './data/firefly.png',
-           './data/vapnik.png']
+           './data/vapnik.png',
+           './data/dorothy.png']
 
 adapt_list=['kernel',
+            'kernel',
             'kernel',
             'kernel',
             'kernel',
