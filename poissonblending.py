@@ -30,18 +30,18 @@ def getGradient_flatten(im):
 def adapt_Gradients_linear(G_src,G_tgt,mu=1e-2,eta=1e-6,nb=100,bias=True):
     Xs, Xt = subsample(G_src,G_tgt,nb)
 
-    ot_mapping=ot.da.OTDA_mapping_linear()
-    ot_mapping.fit(Xs,Xt,mu=mu,eta=eta,bias=bias,numItermax = 10,verbose=True,stopThr=1e-06)
-    return ot_mapping.predict(G_src)
+    ot_mapping=ot.da.LinearTransport()
+    ot_mapping.fit(Xs,Xt=Xt)
+    return ot_mapping.transform(G_src)
 
 
 def adapt_Gradients_kernel(G_src,G_tgt,mu=1e2,eta=1e-8,nb=10,bias=False,sigma=1e2):
     Xs, Xt = subsample(G_src,G_tgt,nb)
 
-    ot_mapping_kernel=ot.da.OTDA_mapping_kernel()
-    ot_mapping_kernel.fit(Xs,Xt,mu=mu,eta=eta,sigma=sigma,bias=bias,numItermax = 10,verbose=True,stopThr=1e-06)
+    ot_mapping_kernel=ot.da.MappingTransport(mu=mu,eta=eta,sigma=sigma,bias=bias, verbose=True)
+    ot_mapping_kernel.fit(Xs,Xt=Xt)
 
-    return ot_mapping_kernel.predict(G_src)
+    return ot_mapping_kernel.transform(G_src)
 
 
 # pre-process the mask array so that uint64 types from opencv.imread can be adapted

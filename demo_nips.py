@@ -9,15 +9,9 @@ import numpy as np
 import cv2
 import pylab as pl
 import sys
-
-
-cap = cv2.VideoCapture(0)
-
-import numpy as np
 import PIL.Image
 
-
-
+cap = cv2.VideoCapture(0)
 
 from poissonblending import blend
 
@@ -26,14 +20,14 @@ fname_img='./data/joconde_0.jpg'
 
 mask_list=['./data/joconde_0_mask.jpg',
            './data/monet_portrait_mask.png',
-           './data/estree_mask.png',
+#           './data/estree_mask.png',
            './data/firefly_mask.png',
            './data/vapnik_mask.png',
            './data/dorothy_mask.png']
 
 img_list=['./data/joconde_0.jpg',
            './data/monet_portrait.png',
-           './data/estree.png',
+#           './data/estree.png',
            './data/firefly.png',
            './data/vapnik.png',
            './data/dorothy.png']
@@ -51,20 +45,20 @@ idimg=0
 
 def load_images(fname_mask,fname_img):
 
-    img_mask = np.asarray(PIL.Image.open(fname_mask))
+    img_mask = np.asarray(PIL.Image.open(fname_mask)).copy()
 
     if len(img_mask.shape)<3:
         img_mask = np.tile(img_mask[:,:,None],(1,1,3)) # remove alpha
     img_mask = img_mask[:,:,:3]
-    img_mask.flags.writeable = True
+    img_mask.setflags(write=1)
 
     #img_source = np.asarray(PIL.Image.open('./testimages/me_flipped.png'))
     #img_source = img_source[:,:,:3]
     #img_source.flags.writeable = True
 
-    img_target = np.asarray(PIL.Image.open(fname_img))
+    img_target = np.asarray(PIL.Image.open(fname_img)).copy()
     img_target = img_target[:,:,:3]
-    img_target.flags.writeable = True
+    img_target.setflags(write=1)
 
 
     #img_mask2=cv2.imread('testimages/mask_video.png')
@@ -76,14 +70,18 @@ def load_images(fname_mask,fname_img):
 
 img_mask,img_target,mask2=load_images(fname_mask,fname_img)
 # nico : change the resolution of the video to match mask resolution
-cap.set(3,img_mask.shape[1])
-cap.set(4,img_mask.shape[0])
+#cap.set(3,img_mask.shape[1])
+#cap.set(4,img_mask.shape[0])
 
 etape=0
 
 while(True):
     # Capture frame-by-frame
     ret, frame = cap.read()
+
+    #print(frame)
+
+    frame = cv2.resize(frame, (img_mask.shape[1],img_mask.shape[0]))
 
     frame=frame[:,::-1,:]
 
@@ -127,7 +125,7 @@ I = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 if doit:
     nbsample=500
     off = (0,0)
-    img_ret4 = blend(img_target, I, img_mask, reg=5, nbsubsample=nbsample,offset=off,adapt=adapt_list[idimg],verbose=True)
+    img_ret4 = blend(img_target, I, img_mask, reg=1, nbsubsample=nbsample,offset=off,adapt=adapt_list[idimg],verbose=True)
 
     #%%
     fs=30
@@ -143,7 +141,7 @@ if doit:
     axarr[1].set_title('target', fontsize=fs)
     axarr[1].axis('off')
     axarr[2].imshow(img_ret4)
-    axarr[2].set_title('Kernel', fontsize=fs)
+    axarr[2].set_title('Adapted', fontsize=fs)
     axarr[2].axis('off')
     pl.subplots_adjust(wspace=0.1)
     pl.tight_layout()
